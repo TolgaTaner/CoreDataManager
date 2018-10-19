@@ -12,6 +12,13 @@
 		950ABD49217913F100355916 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 950ABD47217913F100355916 /* Main.storyboard */; };
 		950ABD4B217913F700355916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 950ABD4A217913F700355916 /* Assets.xcassets */; };
 		950ABD4E217913F700355916 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 950ABD4C217913F700355916 /* LaunchScreen.storyboard */; };
+		950ABD562179140D00355916 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABD552179140D00355916 /* CoreDataManager.swift */; };
+		950ABD5A21791AAF00355916 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABD5921791AAF00355916 /* ErrorModel.swift */; };
+		950ABD5C21791E6400355916 /* PredicateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABD5B21791E6400355916 /* PredicateFormatter.swift */; };
+		950ABD5E2179442200355916 /* TasksTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABD5D2179442200355916 /* TasksTableView.swift */; };
+		950ABD602179449700355916 /* TasksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABD5F2179449700355916 /* TasksTableViewCell.swift */; };
+		950ABD672179460700355916 /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABD662179460700355916 /* TaskModel.swift */; };
+		958B1828217A5E0300B7E2F2 /* BatchOperationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B1827217A5E0300B7E2F2 /* BatchOperationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +29,13 @@
 		950ABD4A217913F700355916 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		950ABD4D217913F700355916 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		950ABD4F217913F700355916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		950ABD552179140D00355916 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		950ABD5921791AAF00355916 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
+		950ABD5B21791E6400355916 /* PredicateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredicateFormatter.swift; sourceTree = "<group>"; };
+		950ABD5D2179442200355916 /* TasksTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksTableView.swift; sourceTree = "<group>"; };
+		950ABD5F2179449700355916 /* TasksTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksTableViewCell.swift; sourceTree = "<group>"; };
+		950ABD662179460700355916 /* TaskModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModel.swift; sourceTree = "<group>"; };
+		958B1827217A5E0300B7E2F2 /* BatchOperationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchOperationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +68,61 @@
 		950ABD42217913F100355916 /* CoreDataManager */ = {
 			isa = PBXGroup;
 			children = (
+				950ABD64217944CC00355916 /* Model */,
+				950ABD65217944E900355916 /* View */,
+				950ABD63217944C500355916 /* Controller */,
+				950ABD62217944AC00355916 /* CoreData */,
 				950ABD43217913F100355916 /* AppDelegate.swift */,
-				950ABD45217913F100355916 /* ViewController.swift */,
-				950ABD47217913F100355916 /* Main.storyboard */,
 				950ABD4A217913F700355916 /* Assets.xcassets */,
-				950ABD4C217913F700355916 /* LaunchScreen.storyboard */,
 				950ABD4F217913F700355916 /* Info.plist */,
 			);
 			path = CoreDataManager;
+			sourceTree = "<group>";
+		};
+		950ABD61217944A100355916 /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				950ABD5D2179442200355916 /* TasksTableView.swift */,
+				950ABD5F2179449700355916 /* TasksTableViewCell.swift */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		950ABD62217944AC00355916 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				950ABD5B21791E6400355916 /* PredicateFormatter.swift */,
+				950ABD552179140D00355916 /* CoreDataManager.swift */,
+				958B1827217A5E0300B7E2F2 /* BatchOperationManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		950ABD63217944C500355916 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				950ABD45217913F100355916 /* ViewController.swift */,
+				950ABD61217944A100355916 /* TableView */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		950ABD64217944CC00355916 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				950ABD5921791AAF00355916 /* ErrorModel.swift */,
+				950ABD662179460700355916 /* TaskModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		950ABD65217944E900355916 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				950ABD47217913F100355916 /* Main.storyboard */,
+				950ABD4C217913F700355916 /* LaunchScreen.storyboard */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +196,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				958B1828217A5E0300B7E2F2 /* BatchOperationManager.swift in Sources */,
+				950ABD5A21791AAF00355916 /* ErrorModel.swift in Sources */,
+				950ABD562179140D00355916 /* CoreDataManager.swift in Sources */,
+				950ABD5E2179442200355916 /* TasksTableView.swift in Sources */,
+				950ABD672179460700355916 /* TaskModel.swift in Sources */,
+				950ABD5C21791E6400355916 /* PredicateFormatter.swift in Sources */,
+				950ABD602179449700355916 /* TasksTableViewCell.swift in Sources */,
 				950ABD46217913F100355916 /* ViewController.swift in Sources */,
 				950ABD44217913F100355916 /* AppDelegate.swift in Sources */,
 			);
