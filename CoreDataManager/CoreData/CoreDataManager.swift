@@ -22,7 +22,7 @@ enum DataAccessError: Error {
 final class CoreDataManager {
     
     #warning("TODO:Change it with your container name.")
-    static let containerName = "containerName"
+    static let containerName = "Tasks"
     var batchOperation : BatchOperationManager?
       
     init() {
@@ -65,8 +65,8 @@ final class CoreDataManager {
     lazy var persistentContainer: NSPersistentContainer? = {
         if #available(iOS 10.0, *) {
             var container = NSPersistentContainer(name: CoreDataManager.containerName)
-            let description = NSPersistentStoreDescription(url: modelUrl)
-            container.persistentStoreDescriptions = [description]
+           // let description = NSPersistentStoreDescription(url: modelUrl)
+           // container.persistentStoreDescriptions = [description]
             container.loadPersistentStores(completionHandler: { (storeDescription, error) in
                 if let error = error as NSError? {
                     fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -83,14 +83,16 @@ final class CoreDataManager {
         if #available(iOS 10.0, *) {
             return nil
         }
-        
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel!)
         let persistentStoreUrl = self.applicationDocumentsDirectory.appendingPathComponent("\(CoreDataManager.containerName).sqlite")
+        
+        DispatchQueue.global(qos: .background).async {
         do {
             try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: persistentStoreUrl, options: [NSMigratePersistentStoresAutomaticallyOption:true,NSInferMappingModelAutomaticallyOption:true])
         }
         catch {
             #warning("TODO:Configured coordinator error")
+        }
         }
         return coordinator
     }()
@@ -114,9 +116,10 @@ final class CoreDataManager {
     }()
     
     
-    lazy var privateMoc:NSManagedObjectContext = {
+    lazy var privateMoc:NSManagedObjectContext? = {
         if #available(iOS 10.0, *) {
-            return persistentContainer?.newBackgroundContext() ?? NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+           // let moc = persistentContainer?.newBackgroundContext() ?? NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+            return nil
         }
         let moc = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         moc.parent = self.mainMoc
@@ -132,28 +135,19 @@ final class CoreDataManager {
     
     func saveContext () throws {
         if #available(iOS 10.0, *) {
-            if privateMoc.hasChanges {
-                persistentContainer?.performBackgroundTask({ (privateMoc) in
+             persistentContainer?.performBackgroundTask({ (moc) in
                     do{
-                        try privateMoc.save()
+                        try moc.save()
                     }
                     catch{}
                 })
-                print("private moc ios +10 saved successfully")
             }
-            if mainMoc.hasChanges {
-                do{
-                    print("main moc ios +10 saved successfully")
-                    try mainMoc.save()
-                }
-                catch{}
-            }
-        }
         else {
-            privateMoc.perform {
+            
+            privateMoc!.perform {
                 print("private moc ios8 and lower saved successfully")
                 do{
-                    try self.privateMoc.save()
+                    try self.privateMoc!.save()
                 }
                 catch{}
                 self.mainMoc.performAndWait {

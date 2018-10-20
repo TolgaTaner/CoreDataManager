@@ -21,6 +21,7 @@
 		958B182C217ACEDF00B7E2F2 /* TaskNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B182B217ACEDF00B7E2F2 /* TaskNavigationController.swift */; };
 		958B182E217AD2B000B7E2F2 /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B182D217AD2B000B7E2F2 /* TaskViewController.swift */; };
 		958B1831217AD69200B7E2F2 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */; };
+		958B1834217BD29100B7E2F2 /* Tasks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 958B1832217BD29100B7E2F2 /* Tasks.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		958B182B217ACEDF00B7E2F2 /* TaskNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskNavigationController.swift; sourceTree = "<group>"; };
 		958B182D217AD2B000B7E2F2 /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 		958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
+		958B1833217BD29100B7E2F2 /* Tasks.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tasks.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		950ABD37217913F100355916 = {
 			isa = PBXGroup;
 			children = (
+				958B1832217BD29100B7E2F2 /* Tasks.xcdatamodeld */,
 				950ABD42217913F100355916 /* CoreDataManager */,
 				950ABD41217913F100355916 /* Products */,
 			);
@@ -105,7 +108,8 @@
 		950ABD63217944C500355916 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				958B182A217ACEBC00B7E2F2 /* Task */,
+				958B182F217AD65E00B7E2F2 /* AddTask */,
+				958B182A217ACEBC00B7E2F2 /* ListTask */,
 				958B1829217ACEA100B7E2F2 /* Navigation */,
 			);
 			path = Controller;
@@ -137,14 +141,13 @@
 			path = Navigation;
 			sourceTree = "<group>";
 		};
-		958B182A217ACEBC00B7E2F2 /* Task */ = {
+		958B182A217ACEBC00B7E2F2 /* ListTask */ = {
 			isa = PBXGroup;
 			children = (
-				958B182F217AD65E00B7E2F2 /* AddTask */,
 				950ABD61217944A100355916 /* TableView */,
 				958B182D217AD2B000B7E2F2 /* TaskViewController.swift */,
 			);
-			path = Task;
+			path = ListTask;
 			sourceTree = "<group>";
 		};
 		958B182F217AD65E00B7E2F2 /* AddTask */ = {
@@ -234,6 +237,7 @@
 				950ABD672179460700355916 /* TaskModel.swift in Sources */,
 				958B1831217AD69200B7E2F2 /* AddTaskViewController.swift in Sources */,
 				950ABD5C21791E6400355916 /* PredicateFormatter.swift in Sources */,
+				958B1834217BD29100B7E2F2 /* Tasks.xcdatamodeld in Sources */,
 				950ABD602179449700355916 /* TasksTableViewCell.swift in Sources */,
 				958B182E217AD2B000B7E2F2 /* TaskViewController.swift in Sources */,
 				950ABD44217913F100355916 /* AppDelegate.swift in Sources */,
@@ -436,6 +440,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		958B1832217BD29100B7E2F2 /* Tasks.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				958B1833217BD29100B7E2F2 /* Tasks.xcdatamodel */,
+			);
+			currentVersion = 958B1833217BD29100B7E2F2 /* Tasks.xcdatamodel */;
+			path = Tasks.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 950ABD38217913F100355916 /* Project object */;
 }
