@@ -16,6 +16,7 @@ class TasksTableView: UITableView {
     override func awakeFromNib() {
         delegate = self
         dataSource = self
+        tableFooterView = UIView()
     }
 }
 

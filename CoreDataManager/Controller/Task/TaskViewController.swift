@@ -25,16 +25,18 @@ class TaskViewController: UIViewController {
             self.taskNavigationController = navigation
             self.taskNavigationController?.actionDelegate = self
         }
-        let predicate = PredicateFormatter(key: "key", value: "value", formatType: .greaterThanEqual)
-        let batch = BatchOperationManager(entityName: "entity", predicateFormatter: predicate)
-        let manager = CoreDataManager(batchOperation: batch)
+       // let predicate = PredicateFormatter(key: "key", value: "value", formatType: .greaterThanEqual)
+        //let batch = BatchOperationManager(entityName: "entity", predicateFormatter: predicate)
+        //let manager = CoreDataManager(batchOperation: batch)
     }
 
 }
 
 extension TaskViewController : TaskNavigationControllerDelegate {
     func addButtonTapped() {
-        // TODO:WHATEVER WHEN USER CLICK THE BUTTON.
+        if let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTaskViewController") as? AddTaskViewController {
+            self.navigationController?.present(controller, animated: true, completion: nil)
+        }
     }
     
 }

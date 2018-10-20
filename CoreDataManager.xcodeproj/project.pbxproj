@@ -20,6 +20,7 @@
 		958B1828217A5E0300B7E2F2 /* BatchOperationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B1827217A5E0300B7E2F2 /* BatchOperationManager.swift */; };
 		958B182C217ACEDF00B7E2F2 /* TaskNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B182B217ACEDF00B7E2F2 /* TaskNavigationController.swift */; };
 		958B182E217AD2B000B7E2F2 /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B182D217AD2B000B7E2F2 /* TaskViewController.swift */; };
+		958B1831217AD69200B7E2F2 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		958B1827217A5E0300B7E2F2 /* BatchOperationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchOperationManager.swift; sourceTree = "<group>"; };
 		958B182B217ACEDF00B7E2F2 /* TaskNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskNavigationController.swift; sourceTree = "<group>"; };
 		958B182D217AD2B000B7E2F2 /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
+		958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,10 +140,19 @@
 		958B182A217ACEBC00B7E2F2 /* Task */ = {
 			isa = PBXGroup;
 			children = (
+				958B182F217AD65E00B7E2F2 /* AddTask */,
 				950ABD61217944A100355916 /* TableView */,
 				958B182D217AD2B000B7E2F2 /* TaskViewController.swift */,
 			);
 			path = Task;
+			sourceTree = "<group>";
+		};
+		958B182F217AD65E00B7E2F2 /* AddTask */ = {
+			isa = PBXGroup;
+			children = (
+				958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */,
+			);
+			path = AddTask;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,6 +232,7 @@
 				950ABD5E2179442200355916 /* TasksTableView.swift in Sources */,
 				958B182C217ACEDF00B7E2F2 /* TaskNavigationController.swift in Sources */,
 				950ABD672179460700355916 /* TaskModel.swift in Sources */,
+				958B1831217AD69200B7E2F2 /* AddTaskViewController.swift in Sources */,
 				950ABD5C21791E6400355916 /* PredicateFormatter.swift in Sources */,
 				950ABD602179449700355916 /* TasksTableViewCell.swift in Sources */,
 				958B182E217AD2B000B7E2F2 /* TaskViewController.swift in Sources */,

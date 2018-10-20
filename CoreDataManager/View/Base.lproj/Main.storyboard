@@ -67,6 +67,96 @@
             </objects>
             <point key="canvasLocation" x="1072.8" y="102.99850074962519"/>
         </scene>
+        <!--Add Task View Controller-->
+        <scene sceneID="g6X-Aq-ce6">
+            <objects>
+                <viewController storyboardIdentifier="AddTaskViewController" modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" useStoryboardIdentifierAsRestorationIdentifier="YES" id="asN-Gb-zN7" customClass="AddTaskViewController" customModule="CoreDataManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="X3S-5w-oYA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hD7-FY-E2q">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ece-ZQ-WEC">
+                                        <rect key="frame" x="62.5" y="222.5" width="250" height="222"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ezO-Ve-KS1">
+                                                <rect key="frame" x="0.0" y="0.0" width="250" height="222"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Task" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XA-fW-jVJ">
+                                                        <rect key="frame" x="10" y="10" width="230" height="36"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tb8-5N-DlP">
+                                                        <rect key="frame" x="10" y="66" width="230" height="30"/>
+                                                        <nil key="textColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lSD-OP-beu">
+                                                        <rect key="frame" x="0.0" y="182" width="250" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="CZ1-LK-sFl"/>
+                                                        </constraints>
+                                                        <state key="normal" title="Done"/>
+                                                        <connections>
+                                                            <action selector="doneButtonTapped:" destination="asN-Gb-zN7" eventType="touchUpInside" id="PY6-F6-cpX"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="lSD-OP-beu" secondAttribute="bottom" id="2GM-D9-IN3"/>
+                                                    <constraint firstAttribute="trailing" secondItem="lSD-OP-beu" secondAttribute="trailing" id="2J8-pT-aVQ"/>
+                                                    <constraint firstAttribute="trailing" secondItem="0XA-fW-jVJ" secondAttribute="trailing" constant="10" id="3rX-He-kwQ"/>
+                                                    <constraint firstItem="tb8-5N-DlP" firstAttribute="top" secondItem="0XA-fW-jVJ" secondAttribute="bottom" constant="20" id="ORR-yk-jOx"/>
+                                                    <constraint firstItem="0XA-fW-jVJ" firstAttribute="leading" secondItem="ezO-Ve-KS1" secondAttribute="leading" constant="10" id="QRh-z6-KO9"/>
+                                                    <constraint firstItem="tb8-5N-DlP" firstAttribute="leading" secondItem="ezO-Ve-KS1" secondAttribute="leading" constant="10" id="XUi-n2-hXs"/>
+                                                    <constraint firstItem="lSD-OP-beu" firstAttribute="leading" secondItem="ezO-Ve-KS1" secondAttribute="leading" id="mrE-aZ-3Vb"/>
+                                                    <constraint firstAttribute="trailing" secondItem="tb8-5N-DlP" secondAttribute="trailing" constant="10" id="oR3-xp-Z38"/>
+                                                    <constraint firstItem="0XA-fW-jVJ" firstAttribute="top" secondItem="ezO-Ve-KS1" secondAttribute="top" constant="10" id="rib-sb-i9s"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="ezO-Ve-KS1" firstAttribute="top" secondItem="ece-ZQ-WEC" secondAttribute="top" id="2tP-YV-xmj"/>
+                                            <constraint firstItem="ezO-Ve-KS1" firstAttribute="leading" secondItem="ece-ZQ-WEC" secondAttribute="leading" id="Hef-GB-5hh"/>
+                                            <constraint firstAttribute="trailing" secondItem="ezO-Ve-KS1" secondAttribute="trailing" id="XMl-fw-1Ps"/>
+                                            <constraint firstAttribute="bottom" secondItem="ezO-Ve-KS1" secondAttribute="bottom" id="mhZ-l3-zcF"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="ece-ZQ-WEC" firstAttribute="centerX" secondItem="hD7-FY-E2q" secondAttribute="centerX" id="I7V-rn-M8b"/>
+                                    <constraint firstItem="ece-ZQ-WEC" firstAttribute="width" secondItem="hD7-FY-E2q" secondAttribute="width" multiplier="2:3" id="gBa-CK-QZi"/>
+                                    <constraint firstItem="ece-ZQ-WEC" firstAttribute="height" secondItem="hD7-FY-E2q" secondAttribute="height" multiplier="1:3" id="q38-Av-nH0"/>
+                                    <constraint firstItem="ece-ZQ-WEC" firstAttribute="centerY" secondItem="hD7-FY-E2q" secondAttribute="centerY" id="t6l-v9-iqz"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DKR-vZ-WgM" firstAttribute="bottom" secondItem="hD7-FY-E2q" secondAttribute="bottom" id="4Gq-CC-Xzt"/>
+                            <constraint firstItem="hD7-FY-E2q" firstAttribute="top" secondItem="X3S-5w-oYA" secondAttribute="top" id="Otj-l7-lkc"/>
+                            <constraint firstItem="hD7-FY-E2q" firstAttribute="leading" secondItem="DKR-vZ-WgM" secondAttribute="leading" id="xeE-if-hHf"/>
+                            <constraint firstItem="DKR-vZ-WgM" firstAttribute="trailing" secondItem="hD7-FY-E2q" secondAttribute="trailing" id="xvT-iJ-vTZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="DKR-vZ-WgM"/>
+                    </view>
+                    <connections>
+                        <outlet property="popUpView" destination="ece-ZQ-WEC" id="YeR-Ph-nVr"/>
+                        <outlet property="taskNameTextField" destination="tb8-5N-DlP" id="tmX-1a-TeT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Aar-OO-DgM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1073" y="778"/>
+        </scene>
         <!--Task Navigation Controller-->
         <scene sceneID="PjT-2n-trV">
             <objects>
