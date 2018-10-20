@@ -9,15 +9,16 @@
 import Foundation
 import CoreData
 
-class TaskModel:NSManagedObject {
+class TaskModel {
     
     let name:String = ""
     
-    
+      /*
     override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
         super.init(entity: entity, insertInto: context)
     }
     
+  
     init(dictionary: Dictionary<String, Any>){
         let context = CoreDataManager.shared.privateMoc
         let entity = NSEntityDescription.entity(forEntityName: PhotoModel.entityName , in: context)
@@ -31,7 +32,7 @@ class TaskModel:NSManagedObject {
         self.imageUrlPath = "https://farm\(self.farm).staticflickr.com/\(self.server)/\(self.id)_\(self.secret).jpg"
         
     }
-    
+    */
     
     
     

@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Task View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="CoreDataManager" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TaskViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="TaskViewController" customModule="CoreDataManager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -60,17 +60,17 @@
                     </view>
                     <navigationItem key="navigationItem" id="Okz-7o-2Zs"/>
                     <connections>
-                        <outlet property="tasksTableView" destination="eXN-gv-c32" id="O0c-Bw-1Sk"/>
+                        <outlet property="tasksTableView" destination="eXN-gv-c32" id="MiW-zN-hiP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1072.8" y="102.99850074962519"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Task Navigation Controller-->
         <scene sceneID="PjT-2n-trV">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="DkK-hV-aTb" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TaskNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="DkK-hV-aTb" customClass="TaskNavigationController" customModule="CoreDataManager" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="wtT-Dz-A2p">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -83,7 +83,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vIC-c5-S3Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="133.59999999999999" y="761.46926536731644"/>
+            <point key="canvasLocation" x="135" y="103"/>
         </scene>
     </scenes>
 </document>
