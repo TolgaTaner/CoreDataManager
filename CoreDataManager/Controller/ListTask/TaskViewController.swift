@@ -38,14 +38,20 @@ class TaskViewController: UIViewController {
     }
     
     func fetchTask() {
+        /*
         coreDataManager!.fetchListAsync(TaskModel.self) { (result) in
             if let taskList = result as? [TaskModel] {
                 self.taskList = taskList
             }
         }
+ */
+        do {
+       try coreDataManager?.updateWithBatch(TaskModel.self)
     }
+        catch{}
     
 
+}
 }
 
 extension TaskViewController : TaskNavigationControllerDelegate {
@@ -58,14 +64,12 @@ extension TaskViewController : TaskNavigationControllerDelegate {
 }
 extension TaskViewController:AddTaskViewControllerDelegate {
     func pop(_ taskName: String) {
-        /*
-        let addedTask :TaskModel = TaskModel()
-        do {
-        try coreDataManager?.saveContext()
+        let addedTask :TaskModel = TaskModel(name: taskName, context: (coreDataManager?.privateMoc)!)
+      do {
+        try? coreDataManager?.saveContext(type: .background)
+        
         }
-        catch {
-            print("error during saving")
-        }
- */
+        
+      
     }
 }

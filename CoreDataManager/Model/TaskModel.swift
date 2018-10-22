@@ -11,16 +11,15 @@ import CoreData
 
 class TaskModel :NSManagedObject {
     
-   
     static let entityName = String(describing: TaskModel.self)
     
     @NSManaged public var name:String
     @NSManaged public var id: String
    
     
-    convenience init(name:String,manager:CoreDataManager) {
-        let entity = NSEntityDescription.entity(forEntityName: TaskModel.entityName , in: (manager.persistentContainer?.viewContext)!)
-        self.init(entity: entity!, insertInto: manager.persistentContainer?.viewContext)
+    init(name:String,context:NSManagedObjectContext) {
+        let entity = NSEntityDescription.entity(forEntityName: TaskModel.entityName , in: context)
+        super.init(entity: entity!, insertInto: context)
         self.name = name
         self.id =  UUID().uuidString
     }

@@ -18,6 +18,12 @@ enum DataAccessError: Error {
     case update
 }
 
+enum ContextType {
+    case main
+    case background
+    case unknown
+}
+
 
 final class CoreDataManager {
     
@@ -32,30 +38,7 @@ final class CoreDataManager {
     init(batchOperation:BatchOperationManager) {
         self.batchOperation = batchOperation
     }
-    /*
-     if #available(iOS 10.0, *) {
-     let privateManagedObjectContext = persistentContainer.newBackgroundContext()
-     }
-     */
-    
-    /*
-     ios8+
-     let privateManagedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-     privateManagedObjectContext.parent = mainManagedObjectContext
-     iOS 10+
-     
-     let privateManagedObjectContext = persistentContainer.newBackgroundContext()
-     
-     var context: NSManagedObjectContext {
-     mutating get {
-     if #available(iOS 10.0, *) {
-     return persistentContainer.viewContext
-     } else {
-     return managedObjectContext
-     }
-     }
-     }
-     */
+  
     
     
     var modelUrl :URL {
@@ -118,8 +101,8 @@ final class CoreDataManager {
     
     lazy var privateMoc:NSManagedObjectContext? = {
         if #available(iOS 10.0, *) {
-           // let moc = persistentContainer?.newBackgroundContext() ?? NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-            return nil
+           let moc = persistentContainer?.newBackgroundContext()
+            return moc
         }
         let moc = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         moc.parent = self.mainMoc
@@ -132,18 +115,19 @@ final class CoreDataManager {
     
   
     
-    
-    func saveContext () throws {
-        if #available(iOS 10.0, *) {
-             persistentContainer?.performBackgroundTask({ (moc) in
-                    do{
-                        try moc.save()
+   
+    func saveContext(type: ContextType) throws {
+           if #available(iOS 10.0, *) {
+        if let context = type == .main ? mainMoc : privateMoc {
+         if context.hasChanges {
+                    do {
+                        try context.save()
                     }
                     catch{}
-                })
+                }
             }
-        else {
-            
+        }
+           else {
             privateMoc!.perform {
                 print("private moc ios8 and lower saved successfully")
                 do{
@@ -158,22 +142,35 @@ final class CoreDataManager {
                     catch{}
                 }
             }
-        }
+            
     }
+        /*
+         persistentContainer?.performBackgroundTask({ (moc) in
+         do{
+         try moc.save()
+         }
+         catch{}
+         })
+         }
+         */
+    }
+    
+    
+    // Synchronous & Asynchronous request times with 800 affected rows on iPhone 6
+    // async->fetch->35ms , update->25ms , delete 19ms
+    // sync->fetch->20ms , update->80ms , delete 57ms
     
     
     func fetchList<T:NSManagedObject>(_ objectType: T.Type) throws -> [T]  {
         let entityName = String(describing: objectType)
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        fetchRequest.predicate = batchOperation?.predicateFormatter?.predicate
-        do {
-            if let fetchedObjects = try mainMoc.fetch(fetchRequest) as? [T] {
+     do {
+            if let fetchedObjects = try privateMoc?.fetch(fetchRequest) as? [T] {
                 return fetchedObjects
             }
             else {
                 throw DataAccessError.fetch
             }
-            
         }
         catch {
             throw DataAccessError.fetch
@@ -181,14 +178,16 @@ final class CoreDataManager {
     }
     
     
-    func fetchListAsync<T:NSManagedObject>(_ objectType: T.Type, fetchOffSet:Int = 0, completion: @escaping (_ result:Any) -> ())  {
+    // fetchRequest.fetchLimit = 20
+    // fetchRequest.fetchOffset = fetchOffSet
+    //fetchRequest.predicate = batchOperation?.predicateFormatter?.predicate
+    
+    
+    
+    func fetchListAsync<T:NSManagedObject>(_ objectType: T.Type, completion: @escaping (_ result:Any) -> ())  {
         
         let entityName = String(describing: objectType)
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        fetchRequest.fetchLimit = 20
-        fetchRequest.fetchOffset = fetchOffSet
-        fetchRequest.predicate = batchOperation?.predicateFormatter?.predicate
-        
         let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { (result) in
             guard let result = result.finalResult as? [T] else {
                 completion(ErrorModel.init(message:"bad fetch from core data"))
@@ -197,7 +196,7 @@ final class CoreDataManager {
            completion(result)
         }
         do {
-            try mainMoc.execute(asyncFetchRequest)
+            try privateMoc?.execute(asyncFetchRequest)
         }
         catch {
           completion(ErrorModel.init(message:"bad fetch from core data"))
@@ -206,18 +205,52 @@ final class CoreDataManager {
     
     func updateWithBatch<T:NSManagedObject>(_ objectType: T.Type) throws  {
         let entityName = String(describing: objectType)
-        batchOperation = BatchOperationManager(entityName: entityName)
-        do {
-            if let result = try  mainMoc.execute((batchOperation?.request)!) as? NSBatchUpdateResult {
-                print(result.result)
+        //batchOperation = BatchOperationManager(entityName: entityName)
+        let request:NSBatchUpdateRequest = NSBatchUpdateRequest(entityName: entityName)
+        request.propertiesToUpdate = [ "name" : "task132131" ]
+        request.predicate = NSPredicate(format: "name == %@","task1")
+        let resultType:NSBatchUpdateRequestResultType = .updatedObjectIDsResultType
+            request.resultType = resultType
+        persistentContainer?.performBackgroundTask({ (privateMoc) in
+             do {
+                if let result = try privateMoc.execute(request) as? NSBatchUpdateResult {
+                    guard let objectIDs = result.result as? [NSManagedObjectID] else { return
+                        #warning("TODO:handle error")
+                    }
+                    let changes = [NSUpdatedObjectsKey: objectIDs]
+                   NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.mainMoc])
+                }
             }
-        }
-        catch{
-            throw DataAccessError.update
-        }
+            catch{
+               #warning("TODO:handle error")
+            }
+            
+        })
     }
     
-    
-    
-    
+    func deleteWithBatch<T:NSManagedObject>(_ objectType:T.Type) throws {
+            persistentContainer?.performBackgroundTask({ (privateMoc) in
+                
+        let entityName = String(describing: objectType)
+         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let predicate = NSPredicate(format: "name == %@","task1")
+        request.predicate = predicate
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+         deleteRequest.resultType = .resultTypeObjectIDs
+        do {
+            let result = try privateMoc.execute(deleteRequest) as? NSBatchDeleteResult
+            guard let objectIDs = result?.result as? [NSManagedObjectID] else {
+                return
+                
+            }
+            let changes = [NSDeletedObjectsKey: objectIDs]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.mainMoc])
+        }
+        catch {
+            
+                }
+            })
+    }
 }
+
+

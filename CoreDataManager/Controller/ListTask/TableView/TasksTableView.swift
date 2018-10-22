@@ -11,7 +11,11 @@ import UIKit
 class TasksTableView: UITableView {
 
     
-    var tasks : [TaskModel] = []
+    var tasks : [TaskModel] = [] {
+        didSet{
+            reloadData()
+        }
+    }
     
     override func awakeFromNib() {
         delegate = self
@@ -22,7 +26,7 @@ class TasksTableView: UITableView {
 
 extension TasksTableView:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return 0
+       return tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
