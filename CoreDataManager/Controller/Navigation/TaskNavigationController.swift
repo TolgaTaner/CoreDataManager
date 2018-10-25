@@ -10,6 +10,7 @@ import UIKit
 
 protocol TaskNavigationControllerDelegate:class {
     func addButtonTapped()
+    func deleteAllButtonTapped()
 }
 
 class TaskNavigationController: UINavigationController {
@@ -24,6 +25,7 @@ class TaskNavigationController: UINavigationController {
         if let theVisibleViewController = self.visibleViewController   {
             if theVisibleViewController is TaskViewController {
                 self.setAddButton(theVisibleViewController)
+                self.setDeleteButton(theVisibleViewController)
             }
         }
     }
@@ -45,11 +47,17 @@ class TaskNavigationController: UINavigationController {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addButtonTapped))
         viewController.navigationItem.rightBarButtonItems = [addButton]
     }
+    func setDeleteButton(_ viewController:UIViewController) {
+        let deleteButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(self.deleteButtonTapped))
+        viewController.navigationItem.leftBarButtonItems = [deleteButton]
+    }
     
     @objc func addButtonTapped() {
         actionDelegate?.addButtonTapped()
     }
     
-
-
+    @objc func deleteButtonTapped() {
+      actionDelegate?.deleteAllButtonTapped()
+    }
+    
 }

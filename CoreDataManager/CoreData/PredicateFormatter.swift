@@ -25,7 +25,7 @@ class PredicateFormatter:NSObject {
     var value:String
     var formatType :PredicateFormat = .none
     var predicate:NSPredicate?
-    var sortAs:NSSortDescriptor?
+    var sortAs:[NSSortDescriptor]?
     
     init(key:String,value:Any,formatType:PredicateFormat) {
         self.key = key
@@ -53,7 +53,7 @@ class PredicateFormatter:NSObject {
         }
     }
     func sortAs(key:String,isAscending:Bool) {
-        self.sortAs = NSSortDescriptor(key: key, ascending: isAscending)
+        self.sortAs?.append(NSSortDescriptor(key: key, ascending: isAscending))
     }
     func changePredicateWith(key:String,value:String,formatType:PredicateFormat = .none) {
         clearPredicate()

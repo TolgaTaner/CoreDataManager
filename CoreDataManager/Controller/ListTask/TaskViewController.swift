@@ -31,6 +31,7 @@ class TaskViewController: UIViewController {
             self.taskNavigationController = navigation
             self.taskNavigationController?.actionDelegate = self
         }
+        tasksTableView.actionDelegate = self 
     //      let predicate = PredicateFormatter(key: "key", value: "value", formatType: .greaterThanEqual)
     //    let batch = BatchOperationManager(entityName: "entity", predicateFormatter: predicate)
          coreDataManager = CoreDataManager()
@@ -58,17 +59,23 @@ class TaskViewController: UIViewController {
         }
     }
     
-    func deleteTask() {
+    func deleteTask(id:String) {
+         let predicate = PredicateFormatter(key: "id", value: id, formatType: .keyValueObserving)
         do {
-            let predicate = PredicateFormatter(key: "name", value: "ExampleTask", formatType: .keyValueObserving)
             try coreDataManager?.deleteWithBatch(TaskModel.self, predicateFormat: predicate)
         }
-        catch {
+        catch let err {
+            print(err)
         }
     }
 }
 
 extension TaskViewController : TaskNavigationControllerDelegate {
+    func deleteAllButtonTapped() {
+        deleteTask(id: "321")
+        self.taskList.removeAll()
+    }
+    
     func addButtonTapped() {
         if let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddTaskViewController") as? AddTaskViewController {
             controller.actionDelegate = self
@@ -81,9 +88,16 @@ extension TaskViewController:AddTaskViewControllerDelegate {
         let addedTask :TaskModel = TaskModel(name: taskName, context: (coreDataManager?.privateMoc)!)
       do {
         try? coreDataManager?.saveContext(type: .background)
-        
+        self.taskList.append(addedTask)
         }
-        
-      
     }
+}
+
+extension TaskViewController:TasksTableViewDelegate {
+    func deleteActionDidTapped(_ selectedTask: TaskModel) {
+         coreDataManager?.privateMoc?.delete(selectedTask)
+        try? coreDataManager?.saveContext(type: .background)
+        self.taskList.removeAll{ $0.id == selectedTask.id }
+      }
+    
 }

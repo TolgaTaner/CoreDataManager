@@ -24,17 +24,22 @@ enum ContextType {
     case unknown
 }
 
-
 final class CoreDataManager {
     
     
     fileprivate static let containerName = "Tasks"
     
     var batchOperation : BatchOperationManager?
+
+    
+    //  #MARK: SETUP
+
     
     init() {
-  
     }
+    
+    
+    
     
     var modelUrl :URL {
         if #available(iOS 10.0, *) {
@@ -113,20 +118,20 @@ final class CoreDataManager {
         return  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
     }()
     
-  
-    func setManager(batchOperationManager:BatchOperationManager) {
-     self.batchOperation = batchOperationManager
-    }
+    
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
+     
+     
    
     func saveContext(type: ContextType) throws {
-           if #available(iOS 10.0, *) {
-        if let context = type == .main ? mainMoc : privateMoc {
-         if context.hasChanges {
+        if #available(iOS 10.0, *) {
+            if let context = type == .main ? mainMoc : privateMoc {
+                if context.hasChanges {
                     do {
                         try context.save()
                     }
-                    catch let error as NSError {
-                        
+                    catch {
+                        throw DataAccessError.saveContext
             }
                 }
             }
@@ -181,9 +186,10 @@ final class CoreDataManager {
         }
     }
     
-    func fetchListAsync<T:NSManagedObject>(_ objectType: T.Type, completion: @escaping (_ result:Any) -> ())  {
+    func fetchListAsync<T:NSManagedObject>(_ objectType: T.Type,predicateFormatter:PredicateFormatter? = nil, completion: @escaping (_ result:Any) -> ())  {
         let entityName = String(describing: objectType)
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        fetchRequest.predicate = predicateFormatter?.predicate
         let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { (result) in
             guard let result = result.finalResult as? [T] else {
                 completion(ErrorModel.init(message:"bad fetch from core data"))
@@ -206,8 +212,8 @@ final class CoreDataManager {
         //batchOperation = BatchOperationManager(entityName: entityName, batchType: .update, predicate: predicateFormat, propertiesToUpdate: properties)
         //batchOperation = BatchOperationManager(entityName: entityName)
         let request:NSBatchUpdateRequest = NSBatchUpdateRequest(entityName: entityName)
-        request.propertiesToUpdate = [ "name" : "ChangedTask" ]
-        request.predicate = NSPredicate(format: "name == %@","ExampleTask")
+        request.propertiesToUpdate = properties
+        request.predicate = predicateFormat.predicate
         let resultType:NSBatchUpdateRequestResultType = .updatedObjectIDsResultType
         request.resultType = resultType
 
@@ -231,26 +237,32 @@ final class CoreDataManager {
     
     func deleteWithBatch<T:NSManagedObject>(_ objectType:T.Type,predicateFormat:PredicateFormatter) throws {
         let entityName = String(describing: objectType)
-        batchOperation = BatchOperationManager(entityName: entityName, batchType: .delete , predicate: predicateFormat)
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+        deleteRequest.resultType = .resultTypeObjectIDs
+        //request.predicate = predicateFormat.predicate
         
+        //batchOperation = BatchOperationManager(entityName: entityName, batchType: .delete , predicate: predicateFormat)
         
             if #available(iOS 10.0, *) {
         persistentContainer?.performBackgroundTask({ (privateMoc) in
         do {
-            let result = try privateMoc.execute((self.batchOperation?.deleteRequest)!) as? NSBatchDeleteResult
+            let result = try privateMoc.execute(deleteRequest) as? NSBatchDeleteResult
             guard let objectIDs = result?.result as? [NSManagedObjectID] else {
                 return
             }
             let changes = [NSDeletedObjectsKey: objectIDs]
             NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.mainMoc])
+          
         }
         catch {
             
                 }
+              return
             })
     }
       
-       else if #available(iOS 9.0, *) {
+        if #available(iOS 9.0, *) {
             let deleteRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             do {
                 let result = try privateMoc!.execute(deleteRequest) as? NSBatchDeleteResult
@@ -263,7 +275,7 @@ final class CoreDataManager {
                 
             }
         }
-            else if #available(iOS 8.0, *) {
+             if #available(iOS 8.0, *) {
                 //TODO:ios8.0 and lower
         }
       }

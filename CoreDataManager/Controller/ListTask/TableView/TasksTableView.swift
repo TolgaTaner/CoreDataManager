@@ -8,16 +8,22 @@
 
 import UIKit
 
+
+protocol TasksTableViewDelegate:class{
+    func deleteActionDidTapped(_ selectedTask:TaskModel)
+}
+
+
 class TasksTableView: UITableView {
 
+    weak var actionDelegate:TasksTableViewDelegate?
     
     var tasks : [TaskModel] = [] {
         didSet{
             DispatchQueue.main.async {
             self.reloadData()
             }
-            
-        }
+         }
     }
     
     override func awakeFromNib() {
@@ -39,6 +45,15 @@ extension TasksTableView:UITableViewDelegate,UITableViewDataSource {
             return cell
         }
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let selectedTask = tasks[indexPath.row]
+        
+        let delete = UIContextualAction(style: .normal, title: "Delete") { [weak self] (action, view, nil)   in
+            self?.actionDelegate?.deleteActionDidTapped(selectedTask)
+        }
+        return UISwipeActionsConfiguration(actions: [delete])
     }
     
     
