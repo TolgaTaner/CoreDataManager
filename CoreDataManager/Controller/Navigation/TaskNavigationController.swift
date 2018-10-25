@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol TaskNavigationControllerDelegate {
+protocol TaskNavigationControllerDelegate:class {
     func addButtonTapped()
 }
 
 class TaskNavigationController: UINavigationController {
 
     
-    var actionDelegate:TaskNavigationControllerDelegate?
+    weak var actionDelegate:TaskNavigationControllerDelegate?
     
     
     override func viewDidLoad() {

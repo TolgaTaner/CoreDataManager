@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol AddTaskViewControllerDelegate {
+protocol AddTaskViewControllerDelegate :class {
     func pop(_ taskName:String)
 }
 
@@ -17,7 +17,7 @@ class AddTaskViewController: UIViewController {
     
     @IBOutlet weak var taskNameTextField: UITextField!
     
-    var actionDelegate:AddTaskViewControllerDelegate?
+   weak var actionDelegate:AddTaskViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

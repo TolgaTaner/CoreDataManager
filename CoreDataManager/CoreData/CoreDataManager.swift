@@ -27,29 +27,30 @@ enum ContextType {
 
 final class CoreDataManager {
     
-    #warning("TODO:Change it with your container name.")
-    static let containerName = "Tasks"
+    
+    fileprivate static let containerName = "Tasks"
+    
     var batchOperation : BatchOperationManager?
-      
+    
     init() {
-        
-    }
-    
-    init(batchOperation:BatchOperationManager) {
-        self.batchOperation = batchOperation
-    }
   
-    
+    }
     
     var modelUrl :URL {
+        if #available(iOS 10.0, *) {
+            let url = self.applicationDocumentsDirectory.appendingPathComponent("\(CoreDataManager.containerName).sqlite")
+            return url
+        }
         return  Bundle.main.url(forResource: CoreDataManager.containerName, withExtension: "momd")!
     }
  
     lazy var persistentContainer: NSPersistentContainer? = {
         if #available(iOS 10.0, *) {
             var container = NSPersistentContainer(name: CoreDataManager.containerName)
-           // let description = NSPersistentStoreDescription(url: modelUrl)
-           // container.persistentStoreDescriptions = [description]
+            let description = NSPersistentStoreDescription(url: modelUrl)
+            description.shouldInferMappingModelAutomatically = true
+            description.shouldMigrateStoreAutomatically = true
+            container.persistentStoreDescriptions = [description]
             container.loadPersistentStores(completionHandler: { (storeDescription, error) in
                 if let error = error as NSError? {
                     fatalError("Unresolved error \(error), \(error.userInfo)")
@@ -68,7 +69,6 @@ final class CoreDataManager {
         }
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel!)
         let persistentStoreUrl = self.applicationDocumentsDirectory.appendingPathComponent("\(CoreDataManager.containerName).sqlite")
-        
         DispatchQueue.global(qos: .background).async {
         do {
             try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: persistentStoreUrl, options: [NSMigratePersistentStoresAutomaticallyOption:true,NSInferMappingModelAutomaticallyOption:true])
@@ -114,7 +114,9 @@ final class CoreDataManager {
     }()
     
   
-    
+    func setManager(batchOperationManager:BatchOperationManager) {
+     self.batchOperation = batchOperationManager
+    }
    
     func saveContext(type: ContextType) throws {
            if #available(iOS 10.0, *) {
@@ -123,7 +125,9 @@ final class CoreDataManager {
                     do {
                         try context.save()
                     }
-                    catch{}
+                    catch let error as NSError {
+                        
+            }
                 }
             }
         }
@@ -177,15 +181,7 @@ final class CoreDataManager {
         }
     }
     
-    
-    // fetchRequest.fetchLimit = 20
-    // fetchRequest.fetchOffset = fetchOffSet
-    //fetchRequest.predicate = batchOperation?.predicateFormatter?.predicate
-    
-    
-    
     func fetchListAsync<T:NSManagedObject>(_ objectType: T.Type, completion: @escaping (_ result:Any) -> ())  {
-        
         let entityName = String(describing: objectType)
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { (result) in
@@ -202,20 +198,25 @@ final class CoreDataManager {
           completion(ErrorModel.init(message:"bad fetch from core data"))
         }
     }
+  
     
-    func updateWithBatch<T:NSManagedObject>(_ objectType: T.Type) throws  {
+    #warning("It is ios8 or higher ")
+    func updateWithBatch<T:NSManagedObject>(_ objectType: T.Type,predicateFormat:PredicateFormatter,updateTo properties:[String:Any]) throws  {
         let entityName = String(describing: objectType)
+        //batchOperation = BatchOperationManager(entityName: entityName, batchType: .update, predicate: predicateFormat, propertiesToUpdate: properties)
         //batchOperation = BatchOperationManager(entityName: entityName)
         let request:NSBatchUpdateRequest = NSBatchUpdateRequest(entityName: entityName)
-        request.propertiesToUpdate = [ "name" : "task132131" ]
-        request.predicate = NSPredicate(format: "name == %@","task1")
+        request.propertiesToUpdate = [ "name" : "ChangedTask" ]
+        request.predicate = NSPredicate(format: "name == %@","ExampleTask")
         let resultType:NSBatchUpdateRequestResultType = .updatedObjectIDsResultType
-            request.resultType = resultType
+        request.resultType = resultType
+
         persistentContainer?.performBackgroundTask({ (privateMoc) in
              do {
                 if let result = try privateMoc.execute(request) as? NSBatchUpdateResult {
-                    guard let objectIDs = result.result as? [NSManagedObjectID] else { return
+                    guard let objectIDs = result.result as? [NSManagedObjectID] else {
                         #warning("TODO:handle error")
+                        return
                     }
                     let changes = [NSUpdatedObjectsKey: objectIDs]
                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.mainMoc])
@@ -228,20 +229,17 @@ final class CoreDataManager {
         })
     }
     
-    func deleteWithBatch<T:NSManagedObject>(_ objectType:T.Type) throws {
-            persistentContainer?.performBackgroundTask({ (privateMoc) in
-                
+    func deleteWithBatch<T:NSManagedObject>(_ objectType:T.Type,predicateFormat:PredicateFormatter) throws {
         let entityName = String(describing: objectType)
-         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        let predicate = NSPredicate(format: "name == %@","task1")
-        request.predicate = predicate
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
-         deleteRequest.resultType = .resultTypeObjectIDs
+        batchOperation = BatchOperationManager(entityName: entityName, batchType: .delete , predicate: predicateFormat)
+        
+        
+            if #available(iOS 10.0, *) {
+        persistentContainer?.performBackgroundTask({ (privateMoc) in
         do {
-            let result = try privateMoc.execute(deleteRequest) as? NSBatchDeleteResult
+            let result = try privateMoc.execute((self.batchOperation?.deleteRequest)!) as? NSBatchDeleteResult
             guard let objectIDs = result?.result as? [NSManagedObjectID] else {
                 return
-                
             }
             let changes = [NSDeletedObjectsKey: objectIDs]
             NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [self.mainMoc])
@@ -251,6 +249,28 @@ final class CoreDataManager {
                 }
             })
     }
+      
+       else if #available(iOS 9.0, *) {
+            let deleteRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+            do {
+                let result = try privateMoc!.execute(deleteRequest) as? NSBatchDeleteResult
+                guard let objectIDs = result?.result as? [NSManagedObjectID] else { return }
+                objectIDs.forEach { objectID in
+                 let eachObj = mainMoc.object(with: objectID)
+                    mainMoc.refresh(eachObj, mergeChanges: false)
+                }
+            } catch {
+                
+            }
+        }
+            else if #available(iOS 8.0, *) {
+                //TODO:ios8.0 and lower
+        }
+      }
+    
+    
+    
+    
 }
 
 

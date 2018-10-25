@@ -9,20 +9,23 @@
 import Foundation
 import CoreData
 
-/*TODO:will be updated
+
  enum BatchType {
  case delete
  case update
+ case unknown
  }
- */
+
 
 class BatchOperationManager :NSObject {
     
-    lazy var properties:[String:Any] = [String:Any]()
-    var predicateFormatter : PredicateFormatter?
-    var request:NSBatchUpdateRequest?
-    var resultType:NSBatchUpdateRequestResultType = .statusOnlyResultType
     
+    
+    var properties:[String:Any]?
+    var predicateFormatter : PredicateFormatter?
+    var updateRequest:NSBatchUpdateRequest? = nil
+    var deleteRequest :NSBatchDeleteRequest? = nil
+    var type:BatchType = .unknown
     /*
      
      case statusOnlyResultType // Return a status boolean
@@ -32,18 +35,34 @@ class BatchOperationManager :NSObject {
      case updatedObjectsCountResultType // Return the number of rows that were updated
      */
     
-    init(entityName:String) {
-        request = NSBatchUpdateRequest(entityName: entityName)
+    init(entityName:String,batchType:BatchType,predicate:PredicateFormatter,propertiesToUpdate:[String:Any] = [:] ) {
+        self.type = batchType
+        self.predicateFormatter = predicate
+        if type == .delete {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+            self.deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+            self.deleteRequest!.resultType = .resultTypeObjectIDs
+            request.predicate = self.predicateFormatter?.predicate
+            
+        }
+       else  if type == .update {
+            self.properties = propertiesToUpdate
+              self.updateRequest = NSBatchUpdateRequest(entityName: entityName)
+             self.updateRequest?.resultType = .updatedObjectIDsResultType
+            updateRequest?.predicate = self.predicateFormatter?.predicate
+        }
     }
+    
     init(entityName:String,predicateFormatter:PredicateFormatter) {
-        request = NSBatchUpdateRequest(entityName: entityName)
+        updateRequest = NSBatchUpdateRequest(entityName: entityName)
         self.predicateFormatter = predicateFormatter
     }
+    
     func setPropertyToUpdate(_ key:String, value:Any) {
-        properties.updateValue(value, forKey: key)
+        properties?.updateValue(value, forKey: key)
     }
     func setPropertiesToUpdate(dictionary:[String:Any]) {
-        self.properties =  properties.merging(dictionary, uniquingKeysWith: { (first, _) in first })
+        self.properties =  properties?.merging(dictionary, uniquingKeysWith: { (first, _) in first })
     }
     
 }

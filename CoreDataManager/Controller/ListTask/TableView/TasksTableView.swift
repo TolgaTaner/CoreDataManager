@@ -13,7 +13,10 @@ class TasksTableView: UITableView {
     
     var tasks : [TaskModel] = [] {
         didSet{
-            reloadData()
+            DispatchQueue.main.async {
+            self.reloadData()
+            }
+            
         }
     }
     

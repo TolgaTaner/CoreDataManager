@@ -15,23 +15,23 @@ enum PredicateFormat:String {
     case contains = "contains[c] %@"
     case greaterThanEqual = ">="
     case lessThanEqual = "<="
-    case equal = "="
+    case equal = "=="
     case none = ""
     
 }
 
 class PredicateFormatter:NSObject {
     var key:String
-    var value:Any
+    var value:String
     var formatType :PredicateFormat = .none
     var predicate:NSPredicate?
     var sortAs:NSSortDescriptor?
     
-    init(key:String,value:String,formatType:PredicateFormat) {
+    init(key:String,value:Any,formatType:PredicateFormat) {
         self.key = key
-        self.value = value
+        self.value = value as? String ?? ""
         super.init()
-        self.setPredicate(key: key, value: value,formatType:formatType)
+        self.setPredicate(key: self.key, value: self.value,formatType:formatType)
     }
     
     override init() {
@@ -46,13 +46,7 @@ class PredicateFormatter:NSObject {
         switch self.formatType {
         case .keyValueObserving:
             self.predicate = NSPredicate(format: formatType.rawValue,key,value)  // Example Given: let ageIs33Predicate = NSPredicate(format: "%K = %@", "age", "33")
-        case .greaterThanEqual:
-            self.predicate = NSPredicate(format: "\(key) \(formatType.rawValue)",value)
-        case .lessThanEqual:
-            self.predicate = NSPredicate(format: "\(key) \(formatType.rawValue)",value)
-        case .equal:
-            self.predicate = NSPredicate(format: "\(key) \(formatType.rawValue)",value)
-        case .contains:
+        case .greaterThanEqual, .lessThanEqual, .equal, .contains:
             self.predicate = NSPredicate(format: "\(key) \(formatType.rawValue)",value)
         case .none:
             break
@@ -60,7 +54,6 @@ class PredicateFormatter:NSObject {
     }
     func sortAs(key:String,isAscending:Bool) {
         self.sortAs = NSSortDescriptor(key: key, ascending: isAscending)
-        
     }
     func changePredicateWith(key:String,value:String,formatType:PredicateFormat = .none) {
         clearPredicate()
