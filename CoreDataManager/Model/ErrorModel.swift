@@ -22,5 +22,9 @@ class ErrorModel {
         self.code = code
         self.message = message
     }
+    init(error:Error,code:Int = -1) {
+        self.code = code
+        self.message = error.localizedDescription 
+    }
     
 }

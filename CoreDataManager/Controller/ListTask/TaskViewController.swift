@@ -12,8 +12,9 @@ class TaskViewController: UIViewController {
 
     
     @IBOutlet weak var tasksTableView: TasksTableView!
-    var coreDataManager:CoreDataManager?
+    
     var taskNavigationController:TaskNavigationController?
+    
     var taskList : [TaskModel] = [] {
         didSet{
             tasksTableView?.tasks = taskList
@@ -32,14 +33,11 @@ class TaskViewController: UIViewController {
             self.taskNavigationController?.actionDelegate = self
         }
         tasksTableView.actionDelegate = self 
-    //      let predicate = PredicateFormatter(key: "key", value: "value", formatType: .greaterThanEqual)
-    //    let batch = BatchOperationManager(entityName: "entity", predicateFormatter: predicate)
-         coreDataManager = CoreDataManager()
-        fetchTask()
+     fetchTask()
     }
     
     func fetchTask() {
-        coreDataManager!.fetchListAsync(TaskModel.self) { [weak self]  (result) in
+        CoreDataManager.shared.fetchListAsync(TaskModel.self) { [weak self]  (result) in
             if let taskList = result as? [TaskModel] {
                 self?.taskList = taskList
             }
@@ -48,31 +46,34 @@ class TaskViewController: UIViewController {
             }
         }
     }
-    
+  
+    /*
     func updateTask() {
         do {
             let predicate = PredicateFormatter(key: "name", value: "ExampleTask", formatType: .keyValueObserving)
             let updateTo = [ "name" : "changedTask" ]
-            try coreDataManager?.updateWithBatch(TaskModel.self, predicateFormat: predicate, updateTo: updateTo)
+            try CoreDataManager.shared.updateWithBatch(TaskModel.self, predicateFormat: predicate, updateTo: updateTo)
         }
         catch {
         }
     }
     
-    func deleteTask(id:String) {
-         let predicate = PredicateFormatter(key: "id", value: id, formatType: .keyValueObserving)
+    func deleteAllTask() {
         do {
-            try coreDataManager?.deleteWithBatch(TaskModel.self, predicateFormat: predicate)
+            try CoreDataManager.shared.deleteWithBatch(TaskModel.self)
         }
         catch let err {
             print(err)
         }
     }
+ */
+    
+    
 }
 
 extension TaskViewController : TaskNavigationControllerDelegate {
     func deleteAllButtonTapped() {
-        deleteTask(id: "321")
+        deleteAllTask()
         self.taskList.removeAll()
     }
     
@@ -85,9 +86,9 @@ extension TaskViewController : TaskNavigationControllerDelegate {
 }
 extension TaskViewController:AddTaskViewControllerDelegate {
     func pop(_ taskName: String) {
-        let addedTask :TaskModel = TaskModel(name: taskName, context: (coreDataManager?.privateMoc)!)
+        let addedTask :TaskModel = TaskModel(name: taskName, context: CoreDataManager.shared.privateMoc!)
       do {
-        try? coreDataManager?.saveContext(type: .background)
+        try? CoreDataManager.shared.saveContext(type: .background)
         self.taskList.append(addedTask)
         }
     }
@@ -95,8 +96,7 @@ extension TaskViewController:AddTaskViewControllerDelegate {
 
 extension TaskViewController:TasksTableViewDelegate {
     func deleteActionDidTapped(_ selectedTask: TaskModel) {
-         coreDataManager?.privateMoc?.delete(selectedTask)
-        try? coreDataManager?.saveContext(type: .background)
+        CoreDataManager.shared.delete(selectedTask)
         self.taskList.removeAll{ $0.id == selectedTask.id }
       }
     

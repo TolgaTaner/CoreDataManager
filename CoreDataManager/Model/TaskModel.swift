@@ -10,6 +10,8 @@ import Foundation
 import CoreData
 
 class TaskModel :NSManagedObject {
+   
+    
     
     static let entityName = String(describing: TaskModel.self)
     
@@ -18,19 +20,23 @@ class TaskModel :NSManagedObject {
    
     
     init(name:String,context:NSManagedObjectContext) {
-        let entity = NSEntityDescription.entity(forEntityName: TaskModel.entityName , in: context)
-        super.init(entity: entity!, insertInto: context)
+      super.init(entity: TaskModel.entity(), insertInto: context)
         self.name = name
         self.id =  UUID().uuidString
     }
+    
     
     override init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
         super.init(entity: entity, insertInto: context)
     }
     
+   
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<TaskModel> {
         return NSFetchRequest<TaskModel>(entityName: TaskModel.entityName )
     }
+    
+  
 
     
 }

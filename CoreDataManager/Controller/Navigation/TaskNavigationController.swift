@@ -28,6 +28,7 @@ class TaskNavigationController: UINavigationController {
                 self.setDeleteButton(theVisibleViewController)
             }
         }
+        
     }
     
     
