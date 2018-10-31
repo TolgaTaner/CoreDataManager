@@ -17,7 +17,7 @@ class TaskModel :NSManagedObject {
     
     @NSManaged public var name:String
     @NSManaged public var id: String
-   
+    @NSManaged public var owner: UserModel
     
     init(name:String,context:NSManagedObjectContext) {
       super.init(entity: TaskModel.entity(), insertInto: context)

@@ -3,8 +3,17 @@
     <entity name="TaskModel" representedClassName=".TaskModel" isAbstract="YES" syncable="YES">
         <attribute name="id" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="owner" maxCount="1" deletionRule="Nullify" destinationEntity="UserModel" inverseName="tasks" inverseEntity="UserModel" syncable="YES"/>
+    </entity>
+    <entity name="UserModel" representedClassName=".UserModel" syncable="YES">
+        <attribute name="id" attributeType="String" syncable="YES"/>
+        <attribute name="imageData" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="surname" attributeType="String" syncable="YES"/>
+        <relationship name="tasks" toMany="YES" deletionRule="Nullify" destinationEntity="TaskModel" inverseName="owner" inverseEntity="TaskModel" syncable="YES"/>
     </entity>
     <elements>
-        <element name="TaskModel" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="TaskModel" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="UserModel" positionX="-63" positionY="0" width="128" height="120"/>
     </elements>
 </model>

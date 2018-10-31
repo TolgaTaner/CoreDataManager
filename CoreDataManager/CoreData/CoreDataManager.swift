@@ -270,6 +270,7 @@ final class CoreDataManager {
                 self?.failure(error: ErrorModel.init(error: DataAccessError.delete))
                 return
             }
+            
             let changes = [NSDeletedObjectsKey: objectIDs]
             NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [(self?.mainMoc)!])
         }

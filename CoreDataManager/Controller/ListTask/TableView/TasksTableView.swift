@@ -18,13 +18,8 @@ class TasksTableView: UITableView {
 
     weak var actionDelegate:TasksTableViewDelegate?
     
-    var tasks : [TaskModel] = [] {
-        didSet{
-            DispatchQueue.main.async {
-            self.reloadData()
-            }
-         }
-    }
+    var tasks : [TaskModel] = [] 
+        
     
     override func awakeFromNib() {
         delegate = self

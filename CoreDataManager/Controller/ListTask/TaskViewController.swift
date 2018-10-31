@@ -17,7 +17,6 @@ class TaskViewController: UIViewController {
     
     var taskList : [TaskModel] = [] {
         didSet{
-            tasksTableView?.tasks = taskList
         }
     }
     
@@ -39,7 +38,12 @@ class TaskViewController: UIViewController {
     func fetchTask() {
         CoreDataManager.shared.fetchListAsync(TaskModel.self) { [weak self]  (result) in
             if let taskList = result as? [TaskModel] {
-                self?.taskList = taskList
+                
+                DispatchQueue.main.async {
+                    self?.tasksTableView?.tasks = taskList
+                    self?.tasksTableView.reloadData()
+                    
+                }
             }
             else if let error = result as? ErrorModel {
                 print(error.message)
@@ -57,24 +61,26 @@ class TaskViewController: UIViewController {
         catch {
         }
     }
+ */
     
     func deleteAllTask() {
         do {
             try CoreDataManager.shared.deleteWithBatch(TaskModel.self)
+            self.tasksTableView.reloadData()
         }
         catch let err {
             print(err)
         }
     }
- */
+ 
     
     
 }
 
 extension TaskViewController : TaskNavigationControllerDelegate {
     func deleteAllButtonTapped() {
+        self.tasksTableView.tasks.removeAll()
         deleteAllTask()
-        self.taskList.removeAll()
     }
     
     func addButtonTapped() {
@@ -86,10 +92,14 @@ extension TaskViewController : TaskNavigationControllerDelegate {
 }
 extension TaskViewController:AddTaskViewControllerDelegate {
     func pop(_ taskName: String) {
+        for _ in 0..<10000 {
         let addedTask :TaskModel = TaskModel(name: taskName, context: CoreDataManager.shared.privateMoc!)
+                self.tasksTableView?.tasks.append(addedTask)
+        }
+        
       do {
         try? CoreDataManager.shared.saveContext(type: .background)
-        self.taskList.append(addedTask)
+       self.tasksTableView.reloadData()
         }
     }
 }
