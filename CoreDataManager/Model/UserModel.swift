@@ -40,6 +40,18 @@ class UserModel :NSManagedObject {
         return NSFetchRequest<UserModel>(entityName: UserModel.entityName )
     }
     
+    @objc(addTasksObject:)
+    @NSManaged public func addToTasks(_ value: TaskModel)
+    
+    @objc(removeTasksObject:)
+    @NSManaged public func removeFromTasks(_ value: TaskModel)
+    
+    @objc(addTasks:)
+    @NSManaged public func addToTasks(_ values: NSSet)
+    
+    @objc(removeTasks:)
+    @NSManaged public func removeFromTasks(_ values: NSSet)
+    
     
     
     

@@ -18,10 +18,14 @@ class TasksTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
+    override func prepareForReuse() {
+        //self.nameLabel.text?.removeAll()
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // push check 
+        
         // Configure the view for the selected state
     }
     

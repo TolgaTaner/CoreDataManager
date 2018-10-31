@@ -14,7 +14,7 @@ class TaskViewController: UIViewController {
     @IBOutlet weak var tasksTableView: TasksTableView!
     
     var taskNavigationController:TaskNavigationController?
-    
+    var coreDataManager: CoreDataManager? 
     var taskList : [TaskModel] = [] {
         didSet{
         }
@@ -36,7 +36,7 @@ class TaskViewController: UIViewController {
     }
     
     func fetchTask() {
-        CoreDataManager.shared.fetchListAsync(TaskModel.self) { [weak self]  (result) in
+        coreDataManager?.fetchListAsync(TaskModel.self) { [weak self]  (result) in
             if let taskList = result as? [TaskModel] {
                 
                 DispatchQueue.main.async {
@@ -65,7 +65,7 @@ class TaskViewController: UIViewController {
     
     func deleteAllTask() {
         do {
-            try CoreDataManager.shared.deleteWithBatch(TaskModel.self)
+            try coreDataManager?.deleteWithBatch(TaskModel.self)
             self.tasksTableView.reloadData()
         }
         catch let err {
@@ -92,13 +92,13 @@ extension TaskViewController : TaskNavigationControllerDelegate {
 }
 extension TaskViewController:AddTaskViewControllerDelegate {
     func pop(_ taskName: String) {
-        for _ in 0..<10000 {
-        let addedTask :TaskModel = TaskModel(name: taskName, context: CoreDataManager.shared.privateMoc!)
+        for _ in 0..<10 {
+            let addedTask :TaskModel = TaskModel(name: taskName, context: (coreDataManager?.privateMoc!)!)
                 self.tasksTableView?.tasks.append(addedTask)
         }
         
       do {
-        try? CoreDataManager.shared.saveContext(type: .background)
+        try? coreDataManager?.saveContext(type: .background)
        self.tasksTableView.reloadData()
         }
     }
@@ -106,7 +106,7 @@ extension TaskViewController:AddTaskViewControllerDelegate {
 
 extension TaskViewController:TasksTableViewDelegate {
     func deleteActionDidTapped(_ selectedTask: TaskModel) {
-        CoreDataManager.shared.delete(selectedTask)
+        coreDataManager?.delete(selectedTask)
         self.taskList.removeAll{ $0.id == selectedTask.id }
       }
     

@@ -25,6 +25,9 @@
 		958B182E217AD2B000B7E2F2 /* TaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B182D217AD2B000B7E2F2 /* TaskViewController.swift */; };
 		958B1831217AD69200B7E2F2 /* AddTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */; };
 		958B1834217BD29100B7E2F2 /* Tasks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 958B1832217BD29100B7E2F2 /* Tasks.xcdatamodeld */; };
+		95AD0228218A025C00BDED80 /* Tasks.sqlite-shm in Resources */ = {isa = PBXBuildFile; fileRef = 95AD0225218A025C00BDED80 /* Tasks.sqlite-shm */; };
+		95AD0229218A025C00BDED80 /* Tasks.sqlite-wal in Resources */ = {isa = PBXBuildFile; fileRef = 95AD0226218A025C00BDED80 /* Tasks.sqlite-wal */; };
+		95AD022A218A025C00BDED80 /* Tasks.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 95AD0227218A025C00BDED80 /* Tasks.sqlite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +51,9 @@
 		958B182D217AD2B000B7E2F2 /* TaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewController.swift; sourceTree = "<group>"; };
 		958B1830217AD69200B7E2F2 /* AddTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskViewController.swift; sourceTree = "<group>"; };
 		958B1833217BD29100B7E2F2 /* Tasks.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tasks.xcdatamodel; sourceTree = "<group>"; };
+		95AD0225218A025C00BDED80 /* Tasks.sqlite-shm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Tasks.sqlite-shm"; sourceTree = "<group>"; };
+		95AD0226218A025C00BDED80 /* Tasks.sqlite-wal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Tasks.sqlite-wal"; sourceTree = "<group>"; };
+		95AD0227218A025C00BDED80 /* Tasks.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Tasks.sqlite; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +70,9 @@
 		950ABD37217913F100355916 = {
 			isa = PBXGroup;
 			children = (
+				95AD0227218A025C00BDED80 /* Tasks.sqlite */,
+				95AD0225218A025C00BDED80 /* Tasks.sqlite-shm */,
+				95AD0226218A025C00BDED80 /* Tasks.sqlite-wal */,
 				958B1832217BD29100B7E2F2 /* Tasks.xcdatamodeld */,
 				950ABD42217913F100355916 /* CoreDataManager */,
 				950ABD41217913F100355916 /* Products */,
@@ -105,8 +114,9 @@
 		950ABD62217944AC00355916 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				950ABD5B21791E6400355916 /* PredicateFormatter.swift */,
+				95AD021E2189FCD200BDED80 /* CoreDataSeed */,
 				950ABD552179140D00355916 /* CoreDataManager.swift */,
+				950ABD5B21791E6400355916 /* PredicateFormatter.swift */,
 				958B1827217A5E0300B7E2F2 /* BatchOperationManager.swift */,
 			);
 			path = CoreData;
@@ -183,6 +193,13 @@
 			path = AddTask;
 			sourceTree = "<group>";
 		};
+		95AD021E2189FCD200BDED80 /* CoreDataSeed */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CoreDataSeed;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -243,7 +260,10 @@
 			files = (
 				950ABD4E217913F700355916 /* LaunchScreen.storyboard in Resources */,
 				950ABD4B217913F700355916 /* Assets.xcassets in Resources */,
+				95AD022A218A025C00BDED80 /* Tasks.sqlite in Resources */,
+				95AD0229218A025C00BDED80 /* Tasks.sqlite-wal in Resources */,
 				950ABD49217913F100355916 /* Main.storyboard in Resources */,
+				95AD0228218A025C00BDED80 /* Tasks.sqlite-shm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

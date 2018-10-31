@@ -18,6 +18,24 @@ enum DataAccessError: Error {
     case update
     case setup
     case delete
+    
+    var localizedDescription: String {
+        /*
+        //handle all cases if you want.
+        switch self {
+        case .fetch:
+            return "fetch error."
+        case .create
+            return "create error."
+         
+        default:
+            break
+        }
+         */
+        return "Something is wrong,try again or report this."
+    }
+    
+    
 }
 
 enum ContextType {
@@ -27,9 +45,7 @@ enum ContextType {
 }
 
 
-    
-
-final class CoreDataManager {
+ class CoreDataManager {
     
     
     fileprivate static let containerName = "Tasks"
@@ -43,7 +59,7 @@ final class CoreDataManager {
 
     
     init() {
-     //   fetchedResultsController = NSFetchedResultsController(fetchRequest: NSManagedObject.fetchRequest(), managedObjectContext: self.mainMoc, sectionNameKeyPath: nil, cacheName: nil)
+     
     }
     
     func failure(error:ErrorModel) {
@@ -52,8 +68,7 @@ final class CoreDataManager {
         }
     }
     
-    let previouslyLaunched =
-        UserDefaults.standard.bool(forKey: CoreDataManager.kPreviouslyLaunched)
+    
     
     
     var modelUrl :URL {
@@ -67,15 +82,15 @@ final class CoreDataManager {
     lazy var persistentContainer: NSPersistentContainer? = {
         if #available(iOS 10.0, *) {
             var container = NSPersistentContainer(name: CoreDataManager.containerName)
-           // self.seedCoreDataContainerIfFirstLaunch()
+            self.seedCoreDataContainerIfFirstLaunch()
             let description = NSPersistentStoreDescription(url: modelUrl)
             description.shouldInferMappingModelAutomatically = true
             description.shouldMigrateStoreAutomatically = true
             container.persistentStoreDescriptions = [description]
             
+            
             container.loadPersistentStores(completionHandler: { [weak self] (storeDescription, error) in
                 if let error = error as NSError? {
-                    NSLog("CoreData error \(error), \(error._userInfo)")
                     self?.failure(error: ErrorModel.init(error: error))
                 }
                 print(storeDescription.url!.absoluteString)
@@ -199,11 +214,12 @@ final class CoreDataManager {
     func fetchListAsync<T:NSManagedObject>(_ objectType: T.Type,predicateFormatter:PredicateFormatter? = nil, completion: @escaping (_ result:Any) -> ())  {
         let entityName = String(describing: objectType)
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+          if predicateFormatter != nil {
         fetchRequest.predicate = predicateFormatter?.predicate
-        
+        }
           let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) {   (result) in
                 guard let result = result.finalResult as? [T] else {
-                    completion(ErrorModel.init(message:"bad fetch from core data"))
+                    completion(ErrorModel.init(error: DataAccessError.fetch))
                     return
                 }
                 completion(result)
@@ -304,40 +320,42 @@ final class CoreDataManager {
 private extension CoreDataManager {
     func seedCoreDataContainerIfFirstLaunch() {
         
+        let previouslyLaunched = UserDefaults.standard.bool(forKey: CoreDataManager.kPreviouslyLaunched)
         if !previouslyLaunched {
-            UserDefaults.standard.set(true,forKey:CoreDataManager.kPreviouslyLaunched)
-            let url = self.modelUrl
+            UserDefaults.standard.set(true, forKey: CoreDataManager.kPreviouslyLaunched)
+            
+       
+            let directory = self.applicationDocumentsDirectory
+            let url = directory.appendingPathComponent(CoreDataManager.containerName + ".sqlite")
+            
+            
             let seededDatabaseURL = Bundle.main.url(forResource: CoreDataManager.containerName, withExtension: "sqlite")!
             _ = try? FileManager.default.removeItem(at: url)
             do {
                 try FileManager.default.copyItem(at: seededDatabaseURL, to: url)
+            } catch let nserror as NSError {
+                fatalError("Error: \(nserror.localizedDescription)")
             }
-            catch let error as Error {
-                self.failure(error: ErrorModel.init(error: error))
-            }
-            let seededSHMURL = Bundle.main.url(forResource: CoreDataManager.containerName, withExtension: ".sqlite-shm")!
-            let shmURL = applicationDocumentsDirectory.appendingPathComponent("\(CoreDataManager.containerName).sqlite-shm")
+            let seededSHMURL = Bundle.main.url(forResource: CoreDataManager.containerName, withExtension: "sqlite-shm")!
+            let shmURL = directory.appendingPathComponent(CoreDataManager.containerName + ".sqlite-shm")
             _ = try? FileManager.default.removeItem(at: shmURL)
             do {
                 try FileManager.default.copyItem(at: seededSHMURL, to: shmURL)
-            }
-            catch let error as Error {
-                self.failure(error: ErrorModel.init(error: error))
+            } catch let nserror as NSError {
+                fatalError("Error: \(nserror.localizedDescription)")
             }
             
-            let seededWALURL = Bundle.main.url(forResource: CoreDataManager.containerName, withExtension: ".sqlite-wal")!
-            let walURL = applicationDocumentsDirectory.appendingPathComponent("\(CoreDataManager.containerName).sqlite-wal")
+            let seededWALURL = Bundle.main.url(forResource: CoreDataManager.containerName, withExtension: "sqlite-wal")!
+            let walURL = directory.appendingPathComponent(CoreDataManager.containerName + ".sqlite-wal")
             _ = try? FileManager.default.removeItem(at: walURL)
             do {
                 try FileManager.default.copyItem(at: seededWALURL, to: walURL)
-            }
-            catch let error as Error {
-                self.failure(error: ErrorModel.init(error: error))
+            } catch let nserror as NSError {
+                fatalError("Error: \(nserror.localizedDescription)")
             }
             
+            print("Seeded Core Data")
         }
-        
-        
     }
     
 }
